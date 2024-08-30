@@ -27,13 +27,13 @@ const LeftSidebar = () => {
   );
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [notificationsViewed, setNotificationsViewed] = useState(false);
 
   const logoutHandler = async () => {
     try {
-      const res = await axios.get(
-        "https://igrams.onrender.com/api/v1/user/logout",
-        { withCredentials: true }
-      );
+      const res = await axios.get("https://igrams.onrender.com/api/v1/user/logout", {
+        withCredentials: true,
+      });
       if (res.data.success) {
         dispatch(setAuthUser(null));
         dispatch(setSelectedPost(null));
@@ -68,6 +68,10 @@ const LeftSidebar = () => {
     }
   };
 
+  const handleNotificationClick = () => {
+    setNotificationsViewed(true);
+  };
+
   const sidebarItems = [
     { icon: <Home />, text: "Home" },
     { icon: <Search />, text: "Search" },
@@ -84,16 +88,15 @@ const LeftSidebar = () => {
       ),
       text: "Profile",
     },
-    { icon: <LogOut />, text: "Logout" },
   ];
 
   return (
-    <div className="fixed top-0 z-10 left-0 px-4 py-6 border-r border-gray-500 w-16 md:w-44 h-screen bg-white flex flex-col">
-      <div className="flex flex-col flex-grow">
+    <div className="fixed top-0 z-10 left-0 px-4 py-6 border-r border-gray-300 w-16 md:w-44 h-screen bg-white flex flex-col justify-between">
+      <div>
         <h1 className="text-center font-bold text-xl mb-8">
           <img className="h-14 w-16 rounded-lg" src="logoi.png" />
         </h1>
-        <div className="flex mt-3 flex-col flex-grow">
+        <div className="flex flex-col flex-grow">
           {sidebarItems.map((item, index) => (
             <div
               key={index}
@@ -102,55 +105,62 @@ const LeftSidebar = () => {
             >
               <div className="text-lg">{item.icon}</div>
               <span className="hidden md:block">{item.text}</span>
-           
-              {item.text === "Notifications" && (
-  <Popover>
-    <PopoverTrigger asChild>
-      <div className="relative">
-        <Button
-          size="icon"
-          className="rounded-full h-6 w-6 bg-red-600 hover:bg-red-700 flex items-center justify-center"
-        >
-          <Heart className="text-white" />
-          {likeNotification.length > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-              {likeNotification.length}
-            </span>
-          )}
-        </Button>
-      </div>
-    </PopoverTrigger>
-    <PopoverContent className="w-64 mt-2">
-      <div className="p-2">
-        {likeNotification.length === 0 ? (
-          <p>No new notifications</p>
-        ) : (
-          likeNotification.map((notification) => (
-            <div
-              key={notification.userId}
-              className="flex items-center gap-2 my-2"
-            >
-              <Avatar>
-                <AvatarImage src={notification.userDetails?.profilePicture} />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <p className="text-sm">
-                <span className="font-bold">
-                  {notification.userDetails?.username}
-                </span>{" "}
-                liked your post
-              </p>
-            </div>
-          ))
-        )}
-      </div>
-    </PopoverContent>
-  </Popover>
-)}
 
+              {item.text === "Notifications" && (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <div
+                      className="relative"
+                      onClick={handleNotificationClick}
+                    >
+                      {!notificationsViewed && likeNotification.length > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                          {likeNotification.length}
+                        </span>
+                      )}
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64 mt-2">
+                    <div className="p-2">
+                      {likeNotification.length === 0 ? (
+                        <p>No new notifications</p>
+                      ) : (
+                        likeNotification.map((notification) => (
+                          <div
+                            key={notification.userId}
+                            className="flex items-center gap-2 my-2"
+                          >
+                            <Avatar>
+                              <AvatarImage
+                                src={notification.userDetails?.profilePicture}
+                              />
+                              <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                            <p className="text-sm">
+                              <span className="font-bold">
+                                {notification.userDetails?.username}
+                              </span>{" "}
+                              liked your post
+                            </p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              )}
             </div>
           ))}
         </div>
+      </div>
+      <div
+        onClick={() => sidebarHandler("Logout")}
+        className="flex items-center gap-4 cursor-pointer mt-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+      >
+        <div className="text-lg">
+          <LogOut />
+        </div>
+        <span className="hidden md:block">Logout</span>
       </div>
       <CreatePost open={open} setOpen={setOpen} />
     </div>
