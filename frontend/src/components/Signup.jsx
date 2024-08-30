@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
+import React, { useEffect, useState } from 'react';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ const Signup = () => {
         password: ""
     });
     const [loading, setLoading] = useState(false);
-    const {user} = useSelector(store=>store.auth);
+    const { user } = useSelector(store => store.auth);
     const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
@@ -48,62 +48,74 @@ const Signup = () => {
         }
     }
 
-    useEffect(()=>{
-        if(user){
+    useEffect(() => {
+        if (user) {
             navigate("/");
         }
-    },[])
+    }, [user, navigate]);
+
     return (
-        <div className='flex items-center w-screen h-screen justify-center'>
-            <form onSubmit={signupHandler} className='shadow-lg flex flex-col gap-5 p-8'>
-                <div className='my-4'>
-                    <h1 className='text-center font-bold text-xl'>LOGO</h1>
-                    <p className='text-sm text-center'>Signup to see photos & videos from your friends</p>
+        <div className='flex items-center justify-center w-screen h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500'>
+            <form onSubmit={signupHandler} className='bg-white p-8 rounded-lg shadow-lg w-full max-w-sm mx-4 md:mx-0 transform transition-transform duration-300 hover:scale-105'>
+                <div className='text-center flex flex-col items-center mb-6'>
+                    <h1 className='text-3xl font-bold text-gray-900 mb-2'>
+
+
+                    <img className='h-20 w-20 rounded-lg' src='logoi.png'/>
+                    </h1>
+                    <p className='text-sm text-gray-600'>Signup to see photos & videos from your friends</p>
                 </div>
-                <div>
-                    <span className='font-medium'>Username</span>
+                <div className='mb-4'>
+                    <label htmlFor="username" className='block text-sm font-medium text-gray-700'>Username</label>
                     <Input
+                        id="username"
                         type="text"
                         name="username"
                         value={input.username}
                         onChange={changeEventHandler}
-                        className="focus-visible:ring-transparent my-2"
+                        className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                     />
                 </div>
-                <div>
-                    <span className='font-medium'>Email</span>
+                <div className='mb-4'>
+                    <label htmlFor="email" className='block text-sm font-medium text-gray-700'>Email</label>
                     <Input
+                        id="email"
                         type="email"
                         name="email"
                         value={input.email}
                         onChange={changeEventHandler}
-                        className="focus-visible:ring-transparent my-2"
+                        className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                     />
                 </div>
-                <div>
-                    <span className='font-medium'>Password</span>
+                <div className='mb-4'>
+                    <label htmlFor="password" className='block text-sm font-medium text-gray-700'>Password</label>
                     <Input
+                        id="password"
                         type="password"
                         name="password"
                         value={input.password}
                         onChange={changeEventHandler}
-                        className="focus-visible:ring-transparent my-2"
+                        className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                     />
                 </div>
-                {
-                    loading ? (
-                        <Button>
+                <div className='mb-4'>
+                    {loading ? (
+                        <Button className="w-full bg-blue-500 hover:bg-blue-600">
                             <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                             Please wait
                         </Button>
                     ) : (
-                        <Button type='submit'>Signup</Button>
-                    )
-                }
-                <span className='text-center'>Already have an account? <Link to="/login" className='text-blue-600'>Login</Link></span>
+                        <Button type='submit' className="w-full bg-blue-500 hover:bg-blue-600">Signup</Button>
+                    )}
+                </div>
+                <div className='text-center'>
+                    <p className='text-sm text-gray-600'>
+                        Already have an account? <Link to="/login" className='text-blue-600 font-semibold hover:underline'>Login</Link>
+                    </p>
+                </div>
             </form>
         </div>
-    )
+    );
 }
 
-export default Signup
+export default Signup;
