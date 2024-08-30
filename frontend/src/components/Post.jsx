@@ -34,13 +34,11 @@ const Post = ({ post }) => {
         try {
             const action = liked ? 'dislike' : 'like';
             const res = await axios.get(`https://igrams.onrender.com/api/v1/post/${post._id}/${action}`, { withCredentials: true });
-            console.log(res.data);
             if (res.data.success) {
                 const updatedLikes = liked ? postLike - 1 : postLike + 1;
                 setPostLike(updatedLikes);
                 setLiked(!liked);
 
-                // apne post ko update krunga
                 const updatedPostData = posts.map(p =>
                     p._id === post._id ? {
                         ...p,
@@ -56,7 +54,6 @@ const Post = ({ post }) => {
     }
 
     const commentHandler = async () => {
-
         try {
             const res = await axios.post(`https://igrams.onrender.com/api/v1/post/${post._id}/comment`, { text }, {
                 headers: {
@@ -64,7 +61,6 @@ const Post = ({ post }) => {
                 },
                 withCredentials: true
             });
-            console.log(res.data);
             if (res.data.success) {
                 const updatedCommentData = [...comment, res.data.comment];
                 setComment(updatedCommentData);
@@ -106,17 +102,18 @@ const Post = ({ post }) => {
             console.log(error);
         }
     }
+
     return (
-        <div className='my-8 w-full max-w-sm mx-auto'>
-            <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
+        <div className='my-8 w-full max-w-2xl mx-auto bg-white p-4 rounded-lg shadow-lg'>
+            <div className='flex items-center justify-between mb-4'>
+                <div className='flex items-center gap-3'>
                     <Avatar>
                         <AvatarImage src={post.author?.profilePicture} alt="post_image" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback>{post.author?.username?.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className='flex items-center gap-3'>
-                        <h1>{post.author?.username}</h1>
-                       {user?._id === post.author._id &&  <Badge variant="secondary">Author</Badge>}
+                        <h1 className='font-semibold text-sm'>{post.author?.username}</h1>
+                        {user?._id === post.author._id && <Badge variant="secondary">Author</Badge>}
                     </div>
                 </div>
                 <Dialog>
@@ -124,29 +121,34 @@ const Post = ({ post }) => {
                         <MoreHorizontal className='cursor-pointer' />
                     </DialogTrigger>
                     <DialogContent className="flex flex-col items-center text-sm text-center">
-                        {
-                        post?.author?._id !== user?._id && <Button variant='ghost' className="cursor-pointer w-fit text-[#ED4956] font-bold">Unfollow</Button>
-                        }
-                        
+                        {post?.author?._id !== user?._id && (
+                            <Button variant='ghost' className="cursor-pointer w-fit text-[#ED4956] font-bold">
+                                Unfollow
+                            </Button>
+                        )}
                         <Button variant='ghost' className="cursor-pointer w-fit">Add to favorites</Button>
-                        {
-                            user && user?._id === post?.author._id && <Button onClick={deletePostHandler} variant='ghost' className="cursor-pointer w-fit">Delete</Button>
-                        }
+                        {user && user?._id === post?.author._id && (
+                            <Button onClick={deletePostHandler} variant='ghost' className="cursor-pointer w-fit">
+                                Delete
+                            </Button>
+                        )}
                     </DialogContent>
                 </Dialog>
             </div>
+
             <img
-                className='rounded-sm my-2 w-full aspect-square object-cover'
+                className='rounded-sm mb-4 w-full aspect-square object-cover'
                 src={post.image}
                 alt="post_img"
             />
 
-            <div className='flex items-center justify-between my-2'>
+            <div className='flex items-center justify-between mb-4'>
                 <div className='flex items-center gap-3'>
-                    {
-                        liked ? <FaHeart onClick={likeOrDislikeHandler} size={'24'} className='cursor-pointer text-red-600' /> : <FaRegHeart onClick={likeOrDislikeHandler} size={'22px'} className='cursor-pointer hover:text-gray-600' />
-                    }
-
+                    {liked ? (
+                        <FaHeart onClick={likeOrDislikeHandler} size={'24'} className='cursor-pointer text-red-600' />
+                    ) : (
+                        <FaRegHeart onClick={likeOrDislikeHandler} size={'22px'} className='cursor-pointer hover:text-gray-600' />
+                    )}
                     <MessageCircle onClick={() => {
                         dispatch(setSelectedPost(post));
                         setOpen(true);
@@ -155,32 +157,36 @@ const Post = ({ post }) => {
                 </div>
                 <Bookmark onClick={bookmarkHandler} className='cursor-pointer hover:text-gray-600' />
             </div>
+
             <span className='font-medium block mb-2'>{postLike} likes</span>
-            <p>
+            <p className='mb-2'>
                 <span className='font-medium mr-2'>{post.author?.username}</span>
                 {post.caption}
             </p>
-            {
-                comment.length > 0 && (
-                    <span onClick={() => {
-                        dispatch(setSelectedPost(post));
-                        setOpen(true);
-                    }} className='cursor-pointer text-sm text-gray-400'>View all {comment.length} comments</span>
-                )
-            }
+
+            {comment.length > 0 && (
+                <span onClick={() => {
+                    dispatch(setSelectedPost(post));
+                    setOpen(true);
+                }} className='cursor-pointer text-sm text-gray-400'>
+                    View all {comment.length} comments
+                </span>
+            )}
             <CommentDialog open={open} setOpen={setOpen} />
-            <div className='flex items-center justify-between'>
+
+            <div className='flex items-center justify-between mt-4'>
                 <input
                     type="text"
                     placeholder='Add a comment...'
                     value={text}
                     onChange={changeEventHandler}
-                    className='outline-none text-sm w-full'
+                    className='outline-none text-sm w-full bg-gray-100 p-2 rounded-lg'
                 />
-                {
-                    text && <span onClick={commentHandler} className='text-[#3BADF8] cursor-pointer'>Post</span>
-                }
-
+                {text && (
+                    <span onClick={commentHandler} className='text-[#3BADF8] cursor-pointer ml-2'>
+                        Post
+                    </span>
+                )}
             </div>
         </div>
     )

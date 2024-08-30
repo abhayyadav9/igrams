@@ -74,7 +74,7 @@ const LeftSidebar = () => {
     { icon: <TrendingUp />, text: "Explore" },
     { icon: <MessageCircle />, text: "Messages" },
     { icon: <Heart />, text: "Notifications" },
-    { icon: <PlusSquare  />, text: "Create" },
+    { icon: <PlusSquare />, text: "Create" },
     {
       icon: (
         <Avatar className="w-8 h-8">
@@ -84,15 +84,14 @@ const LeftSidebar = () => {
       ),
       text: "Profile",
     },
-    { icon: <LogOut  />, text: "Logout" },
+    { icon: <LogOut />, text: "Logout" },
   ];
 
   return (
     <div className="fixed top-0 z-10 left-0 px-4 py-6 border-r border-gray-500 w-16 md:w-44 h-screen bg-white flex flex-col">
       <div className="flex flex-col flex-grow">
         <h1 className="text-center font-bold text-xl mb-8">
-            
-        <img className='h-14 mx-3 w-20 rounded-lg' src='logoi.png'/>
+          <img className="h-14 w-16 rounded-lg" src="logoi.png" />
         </h1>
         <div className="flex mt-3 flex-col flex-grow">
           {sidebarItems.map((item, index) => (
