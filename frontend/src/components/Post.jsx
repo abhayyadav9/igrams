@@ -94,8 +94,8 @@ const Post = ({ post }) => {
 
     const bookmarkHandler = async () => {
         try {
-            const res = await axios.get(`https://igrams.onrender.com/api/v1/post/${post?._id}/bookmark`, {withCredentials:true});
-            if(res.data.success){
+            const res = await axios.get(`https://igrams.onrender.com/api/v1/post/${post?._id}/bookmark`, { withCredentials: true });
+            if (res.data.success) {
                 toast.success(res.data.message);
             }
         } catch (error) {
@@ -104,14 +104,14 @@ const Post = ({ post }) => {
     }
 
     return (
-        <div className='my-8 w-full max-w-2xl mx-auto bg-white p-4 rounded-lg shadow-lg'>
-            <div className='flex items-center justify-between mb-4'>
+        <div className='my-8 w-full max-w-md mx-auto bg-white p-4 rounded-lg shadow-sm'>
+            <div className='flex items-center justify-between mb-3'>
                 <div className='flex items-center gap-3'>
                     <Avatar>
                         <AvatarImage src={post.author?.profilePicture} alt="post_image" />
                         <AvatarFallback>{post.author?.username?.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <div className='flex items-center gap-3'>
+                    <div className='flex flex-col'>
                         <h1 className='font-semibold text-sm'>{post.author?.username}</h1>
                         {user?._id === post.author._id && <Badge variant="secondary">Author</Badge>}
                     </div>
@@ -137,29 +137,29 @@ const Post = ({ post }) => {
             </div>
 
             <img
-                className='rounded-sm mb-4 w-full aspect-square object-cover'
+                className='rounded-sm mb-3 w-full aspect-square object-cover'
                 src={post.image}
                 alt="post_img"
             />
 
-            <div className='flex items-center justify-between mb-4'>
+            <div className='flex items-center justify-between mb-3'>
                 <div className='flex items-center gap-3'>
                     {liked ? (
-                        <FaHeart onClick={likeOrDislikeHandler} size={'24'} className='cursor-pointer text-red-600' />
+                        <FaHeart onClick={likeOrDislikeHandler} size={'20px'} className='cursor-pointer text-red-600' />
                     ) : (
-                        <FaRegHeart onClick={likeOrDislikeHandler} size={'22px'} className='cursor-pointer hover:text-gray-600' />
+                        <FaRegHeart onClick={likeOrDislikeHandler} size={'20px'} className='cursor-pointer hover:text-gray-600' />
                     )}
                     <MessageCircle onClick={() => {
                         dispatch(setSelectedPost(post));
                         setOpen(true);
-                    }} className='cursor-pointer hover:text-gray-600' />
-                    <Send className='cursor-pointer hover:text-gray-600' />
+                    }} className='cursor-pointer hover:text-gray-600' size={20} />
+                    <Send className='cursor-pointer hover:text-gray-600' size={20} />
                 </div>
-                <Bookmark onClick={bookmarkHandler} className='cursor-pointer hover:text-gray-600' />
+                <Bookmark onClick={bookmarkHandler} className='cursor-pointer hover:text-gray-600' size={20} />
             </div>
 
-            <span className='font-medium block mb-2'>{postLike} likes</span>
-            <p className='mb-2'>
+            <span className='font-medium block mb-1'>{postLike} likes</span>
+            <p className='mb-1'>
                 <span className='font-medium mr-2'>{post.author?.username}</span>
                 {post.caption}
             </p>
@@ -174,7 +174,7 @@ const Post = ({ post }) => {
             )}
             <CommentDialog open={open} setOpen={setOpen} />
 
-            <div className='flex items-center justify-between mt-4'>
+            <div className='flex items-center justify-between mt-3'>
                 <input
                     type="text"
                     placeholder='Add a comment...'
